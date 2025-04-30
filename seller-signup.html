@@ -1,64 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Seller Sign Up - Bloom & Co.</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    /* Enhancements to form elements */
-    input, button {
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #fefcea, #e6e9f0);
+      margin: 0;
+    }
+
+    header {
+      background-color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #122C4F;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: 8vh auto;
+      background-color: white;
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #122C4F;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
       width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #5B88B2;
-      outline: none;
-      box-shadow: 0 0 5px rgba(91, 136, 178, 0.5);
     }
 
     button {
+      width: 100%;
+      padding: 0.8rem;
       background-color: #122C4F;
       color: white;
       border: none;
-      cursor: pointer;
+      border-radius: 6px;
       font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     button:hover {
-      background-color: #0e2341;
-      transform: scale(1.02);
+      background-color: #0e203c;
     }
 
-    .message {
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      color: red;
+    .footer-links {
       text-align: center;
+      margin-top: 1rem;
+    }
+
+    .footer-links a {
+      color: #5B88B2;
+      text-decoration: none;
     }
 
     .back-link {
+      text-align: center;
       display: block;
       margin-top: 1.5rem;
-      text-align: center;
-      color: #5B88B2;
-      text-decoration: none;
-      font-size: 0.9rem;
+      color: #122C4F;
     }
 
-    .back-link:hover {
-      text-decoration: underline;
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+      color: green;
+    }
+
+    .error {
+      color: red;
     }
   </style>
 </head>
-
 <body>
+
   <header>
     <div class="logo">Bloom & Co.</div>
     <nav>
@@ -71,22 +110,66 @@
   <div class="form-container">
     <h2>Create Seller Account</h2>
 
-    <input type="text" id="sellerName" placeholder="Seller Name">
-    <input type="email" id="sellerEmailSignup" placeholder="Email">
-    <input type="text" id="sellerAddress" placeholder="Address">
-    <input type="text" id="sellerPhone" placeholder="Phone Number">
-    <input type="password" id="sellerPasswordSignup" placeholder="Password">
+    <form id="sellerForm">
+      <input type="text" id="sellerName" placeholder="Seller Name" required>
+      <input type="email" id="sellerEmailSignup" placeholder="Email" required>
+      <input type="text" id="sellerAddress" placeholder="Address" required>
+      <input type="text" id="sellerPhone" placeholder="Phone Number" required>
+      <input type="password" id="sellerPasswordSignup" placeholder="Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
 
-    <button type="submit" onclick="sellerSignUp()">Sign Up</button>
-
-    <div class="message" id="sellerSignupMessage"></div>
-
-    <p style="text-align:center; margin-top:1rem;">
-      Already have a seller account? <a href="seller-login.html" style="color: #5B88B2;">Login here</a>
-    </p>
+    <div class="footer-links">
+      Already have a seller account? <a href="seller-login.html">Login here</a>
+    </div>
     <a href="index.html" class="back-link">← Back to Home</a>
+    <div class="message" id="sellerSignupMessage"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById("sellerForm");
+    const msgDiv = document.getElementById("sellerSignupMessage");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const sellerData = {
+        name: document.getElementById("sellerName").value,
+        email: document.getElementById("sellerEmailSignup").value,
+        address: document.getElementById("sellerAddress").value,
+        phone: document.getElementById("sellerPhone").value,
+        password: document.getElementById("sellerPasswordSignup").value
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/seller", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sellerData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          msgDiv.textContent = "Seller account created successfully!";
+          msgDiv.classList.remove("error");
+          msgDiv.classList.add("message");
+          localStorage.setItem("user", JSON.stringify({ name: sellerData.name, email: sellerData.email }));
+          setTimeout(() => {
+            window.location.href = "seller-login.html";
+          }, 1500);
+        } else {
+          msgDiv.textContent = result.message || "Signup failed.";
+          msgDiv.classList.add("error");
+        }
+
+      } catch (err) {
+        console.error(err);
+        msgDiv.textContent = "Server error. Please try again.";
+        msgDiv.classList.add("error");
+      }
+    });
+  </script>
+
 </body>
 </html>

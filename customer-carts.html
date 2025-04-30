@@ -1,12 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Carts - Bloom & Co.</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #fefcea, #e6e9f0);
+      margin: 0;
+      padding: 0;
+    }
 
+    header {
+      background-color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-weight: bold;
+      color: #122C4F;
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: #122C4F;
+      font-weight: 500;
+    }
+
+    .form-container {
+      max-width: 800px;
+      margin: 6vh auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #122C4F;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .cart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cart-item {
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-actions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    button {
+      background-color: #122C4F;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0e203c;
+    }
+
+    .secondary-btn {
+      background-color: #888;
+      margin-left: 1rem;
+    }
+
+    .secondary-btn:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
 <body>
   <header>
     <div class="logo">Bloom & Co.</div>
@@ -18,45 +104,119 @@
     </nav>
   </header>
 
-  <div class="form-container cart-container">
-    <h2><span id="customerNameDisplay">Your</span> Shopping Carts 🛒</h2>
-  
+  <div class="form-container">
+    <h2 id="customerCartTitle">Your Shopping Carts 🛒</h2>
+
     <div id="cartsList" class="cart-list">
-      <!-- Individual carts injected here -->
+      <!-- Populated by JS -->
     </div>
-  
+
     <div class="cart-actions">
-      <button onclick="createNewCart()"> Create New Cart</button>
+      <button onclick="createNewCart()">Create New Cart</button>
       <button onclick="window.location.href='customer-profile.html'" class="secondary-btn">← Back to Profile</button>
     </div>
   </div>
 
-    <a href="customer-profile.html" class="back-link">← Back to Profile</a>
-  </div>
-
-  <script src="script.js"></script>
-
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = JSON.parse(localStorage.getItem('loggedInUser'));
-      if (!user) {
-        window.location.href = "customer-login.html";
+    const cartsList = document.getElementById("cartsList");
+    const title = document.getElementById("customerCartTitle");
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!token || !user) {
+      window.location.href = "customer-login.html";
+    } else {
+      title.textContent = `${user.name}'s Shopping Carts 🛒`;
+      loadCarts();
+    }
+
+    async function loadCarts() {
+      cartsList.innerHTML = "Loading...";
+      try {
+        const res = await fetch("http://127.0.0.1:5000/shopping_cart", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const carts = await res.json();
+        renderCarts(carts);
+      } catch (err) {
+        cartsList.innerHTML = "<p>Error loading carts.</p>";
+        console.error(err);
+      }
+    }
+
+    function renderCarts(carts) {
+      if (carts.length === 0) {
+        cartsList.innerHTML = "<p>You have no shopping carts yet.</p>";
         return;
       }
 
-      // Set personalized title
-      const cartTitle = document.getElementById('customerCartTitle');
-      cartTitle.innerHTML = `${user.name}'s Shopping Carts`;
+      cartsList.innerHTML = "";
+      carts.forEach(cart => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <div>
+            <strong>Cart ID:</strong> ${cart.cart_id}<br>
+            <strong>Created:</strong> ${cart.creation_date}
+          </div>
+          <button onclick="deleteCart(${cart.cart_id})">Delete</button>
+        `;
+        cartsList.appendChild(div);
+      });
+    }
 
-      // Load carts (already in script.js)
-    });
+    async function createNewCart() {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/shopping_cart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            customer_id: user.id || 1, // use correct ID if available
+            creation_date: new Date().toISOString().slice(0, 10)
+          })
+        });
+
+        if (res.ok) {
+          loadCarts();
+        } else {
+          alert("Failed to create cart.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error creating cart.");
+      }
+    }
+
+    async function deleteCart(cartId) {
+      if (!confirm("Are you sure you want to delete this cart?")) return;
+
+      try {
+        const res = await fetch(`http://127.0.0.1:5000/shopping_cart/${cartId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (res.ok) {
+          loadCarts();
+        } else {
+          alert("Failed to delete cart.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error deleting cart.");
+      }
+    }
 
     function logout() {
-      localStorage.removeItem('loggedInUser');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = "index.html";
     }
   </script>
-  <script src="script.js"></script>
-
 </body>
 </html>

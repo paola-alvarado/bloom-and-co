@@ -43,9 +43,7 @@
       margin-bottom: 1.5rem;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
+    input {
       width: 100%;
       padding: 0.8rem;
       margin-bottom: 1rem;
@@ -150,9 +148,7 @@
       try {
         const response = await fetch("http://127.0.0.1:5000/customer", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(customerData)
         });
 
