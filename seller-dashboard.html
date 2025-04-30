@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="seller-products.html">My Products</a>
+      <a href="seller-dashboard.html">Dashboard</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2 id="welcomeSeller">Welcome!</h2>
+
+    <p><strong>Email:</strong> <span id="sellerEmailDisplay"></span></p>
+    <p><strong>Address:</strong> <span id="sellerAddressDisplay"></span></p>
+    <p><strong>Phone:</strong> <span id="sellerPhoneDisplay"></span></p>
+
+    <a href="seller-products.html" class="back-link">→ Manage Products</a><br>
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const seller = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!seller) {
+        window.location.href = "seller-login.html";
+        return;
+      }
+
+      // PERSONALIZED GREETING
+      const welcomeText = document.getElementById('welcomeSeller');
+      welcomeText.innerHTML = `Welcome, <span style="color:#5B88B2;">${seller.name}</span>!`;
+
+      // Fill other info
+      document.getElementById('sellerEmailDisplay').textContent = seller.email;
+      document.getElementById('sellerAddressDisplay').textContent = seller.address;
+      document.getElementById('sellerPhoneDisplay').textContent = seller.phone;
+    });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>

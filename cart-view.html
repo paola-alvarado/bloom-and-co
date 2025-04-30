@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Cart - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-profile.html">Profile</a>
+      <a href="customer-carts.html">My Carts</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Cart Details</h2>
+    <div id="cartItems">
+      <!-- Items will appear here -->
+    </div>
+    <button onclick="checkoutCart()">Checkout Cart</button>
+    <a href="customer-carts.html" class="back-link">← Back to My Carts</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

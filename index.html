@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloom & Co.</title>
+  <style>
+    :root {
+      --background: #FBF9E4;
+      --text: #122C4F;
+      --accent: #5B88B2;
+      --dark: #000000;
+      --white: #ffffff;
+      --rating-color: #FFD700;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--white);
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .hero {
+      position: relative;
+      height: 70vh;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 1s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      margin: 0.5rem 0 1.5rem;
+      color: #f0f0f0;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    }
+
+    .hero button {
+      background: linear-gradient(135deg, var(--accent), var(--text));
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .hero button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(135deg, var(--text), var(--accent));
+    }
+
+
+
+    .section-title {
+      padding: 2rem 1rem 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      padding: 0 2rem 3rem;
+    }
+
+    .product-card {
+      background: var(--white);
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 480px;
+    }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+      display: none;
+    }
+
+    .carousel img.active {
+      display: block;
+    }
+
+    .carousel .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 0.4rem;
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .carousel:hover .arrow {
+      opacity: 1;
+    }
+
+    .arrow.left {
+      left: 10px;
+    }
+
+    .arrow.right {
+      right: 10px;
+    }
+
+    .product-card h3 {
+      font-size: 1rem;
+      margin: 0.5rem 0 0.25rem;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .product-card p {
+      font-size: 0.85rem;
+      color: #555;
+      min-height: 2rem;
+      margin: 0.25rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .product-card .rating {
+      color: var(--rating-color);
+      margin: 0.25rem 0;
+    }
+
+    .product-card span {
+      font-weight: bold;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    .footer {
+      background-color: var(--white);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      border-top: 1px solid #eee;
+    }
+
+    @media screen and (max-width: 1024px) {
+      .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+    .why-shop {
+      background-color: #fff;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .why-card {
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: #FBF9E4;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .why-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .why-card img {
+      width: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .why-card h4 {
+      margin: 0.5rem 0;
+      color: var(--text);
+    }
+
+    .why-card p {
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"> Bloom & Co.</div>
+    <nav>
+      <a href="shop.html">Shop</a>
+      <a href="login.html">Login</a>
+      <a href="profile.html">Profile</a>
+      <a href="customer-carts.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Spring Collection</h1>
+      <p>Refresh your essentials with our new arrivals</p>
+      <button>SHOP NOW</button>
+    </div>
+  </section>
+  
+
+  <section>
+    <h2 class="section-title">Bestseller</h2>
+    <div class="product-grid">
+      <!-- Product 1 -->
+      <div class="product-card">
+        <div class="carousel" id="carousel1">
+          <img src="https://www.byrdie.com/thmb/khBtGcmwKgk7GE3t4ELUCOWM974=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/sabrinacarpenter_1733682611_3518707240100212813_8713286-2984c6c4f8324677bc4516ff1a35055b.jpg" class="active" alt="Image 1">
+          <img src="https://media.superdrug.com//medias/sys_master/prd-images/hbf/h63/11671327473694/prd-ls4-849263_600x600/prd-ls4-849263-600x600.jpg" alt="Image 2">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3kLjDRUi2cAMLRNrRyaSJiUyGA17c07vD9vdSTxsMQwmO3xzTGSuARZobFQ7TRzmC9F0&usqp=CAU" alt="Image 3">
+          <button class="arrow left">◀</button>
+          <button class="arrow right">▶</button>
+        </div>
+        <h3>Sabrina Carpenter Me Espresso Perfume</h3>
+        <p>good stuff</p>
+        <div class="rating">★★★★★</div>
+        <span>$40.00</span>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card">
+        <div class="carousel" id="carousel2">
+          <img src="https://arianagrandefragrances.com/cdn/shop/products/thankunext.png?v=1582917505" class="active" alt="Image 1">
+          <img src="https://m.media-amazon.com/images/I/61XudjcLXuL._AC_UF350,350_QL80_.jpg" alt="Image 2">
+          <img src="https://media.ulta.com/i/ulta/2551012cm_alt03?w=1600&h=1600&fmt=auto" alt="Image 3">
+          <button class="arrow left">◀</button>
+          <button class="arrow right">▶</button>
+        </div>
+        <h3>Ariana Grande Thank U, Next</h3>
+        <p>real good stuff</p>
+        <div class="rating">★★★★★</div>
+        <span>$50.00</span>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card">
+        <div class="carousel" id="carousel2">
+          <img src="https://arianagrandefragrances.com/cdn/shop/products/thankunext.png?v=1582917505" class="active" alt="Image 1">
+          <img src="https://m.media-amazon.com/images/I/61XudjcLXuL._AC_UF350,350_QL80_.jpg" alt="Image 2">
+          <img src="https://media.ulta.com/i/ulta/2551012cm_alt03?w=1600&h=1600&fmt=auto" alt="Image 3">
+          <button class="arrow left">◀</button>
+          <button class="arrow right">▶</button>
+        </div>
+        <h3>Ariana Grande Thank U, Next</h3>
+        <p>real good stuff</p>
+        <div class="rating">★★★★★</div>
+        <span>$50.00</span>
+      </div>
+      <!-- Product 4 -->
+      <div class="product-card">
+        <div class="carousel" id="carousel1">
+          <img src="https://www.byrdie.com/thmb/khBtGcmwKgk7GE3t4ELUCOWM974=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/sabrinacarpenter_1733682611_3518707240100212813_8713286-2984c6c4f8324677bc4516ff1a35055b.jpg" class="active" alt="Image 1">
+          <img src="https://media.superdrug.com//medias/sys_master/prd-images/hbf/h63/11671327473694/prd-ls4-849263_600x600/prd-ls4-849263-600x600.jpg" alt="Image 2">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3kLjDRUi2cAMLRNrRyaSJiUyGA17c07vD9vdSTxsMQwmO3xzTGSuARZobFQ7TRzmC9F0&usqp=CAU" alt="Image 3">
+          <button class="arrow left">◀</button>
+          <button class="arrow right">▶</button>
+        </div>
+        <h3>Sabrina Carpenter Me Espresso Perfume</h3>
+        <p>good stuff</p>
+        <div class="rating">★★★★★</div>
+        <span>$40.00</span>
+      </div>
+
+    </div>
+  </section>
+  <section class="why-shop">
+    <h2 class="section-title">Why Shop With Us?</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1974/1974003.png" alt="Fast Shipping">
+        <h4>Fast & Reliable Shipping</h4>
+        <p>Get your orders delivered swiftly with tracked and insured shipping methods.</p>
+      </div>
+      <div class="why-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/4021/4021635.png" alt="Quality Guaranteed">
+        <h4>Premium Quality Products</h4>
+        <p>All items are carefully curated to meet our highest quality standards.</p>
+      </div>
+      <div class="why-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/4205/4205011.png" alt="Customer Support">
+        <h4>24/7 Customer Support</h4>
+        <p>We’re always here to help with anything — anytime, anywhere.</p>
+      </div>
+    </div>
+  </section>
+  
+
+  <footer class="footer">
+    &copy; 2025 Bloom & Co. All rights reserved.
+  </footer>
+
+  <script>
+    // Carousel logic
+    document.querySelectorAll('.carousel').forEach((carousel) => {
+      let currentIndex = 0;
+      const images = carousel.querySelectorAll('img');
+
+      function moveSlide(step) {
+        images[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + step + images.length) % images.length;
+        images[currentIndex].classList.add('active');
+      }
+
+      carousel.querySelector('.arrow.left').addEventListener('click', (e) => {
+        e.stopPropagation();
+        moveSlide(-1);
+      });
+
+      carousel.querySelector('.arrow.right').addEventListener('click', (e) => {
+        e.stopPropagation();
+        moveSlide(1);
+      });
+    });
+
+    // Profile nav logic
+    const navProfileLink = document.getElementById("profileLinkNav");
+    const loginLink = document.getElementById("loginNav");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser && storedUser.name) {
+      navProfileLink.textContent = "Profile";
+      navProfileLink.href = "profile.html";
+      loginLink.style.display = "none";
+    } else {
+      navProfileLink.textContent = "Please login first";
+      navProfileLink.href = "login.html";
+    }
+    // Hero Slideshow
+    const hero = document.getElementById('hero');
+    const heroImages = [
+      "https://cdn.50-ml.com/media/catalog/category/profumi-freschi-landing_1.jpg",
+      "https://beautypert.com/wp-content/uploads/2023/11/best-vanilla-perfumes-header.jpg"
+    ];
+    let currentHeroIndex = 0;
+
+    function updateHeroBackground() {
+      hero.style.backgroundImage = `url(${heroImages[currentHeroIndex]})`;
+      currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+    }
+
+    // Start slideshow
+    updateHeroBackground();
+    setInterval(updateHeroBackground, 5000); // change every 5 seconds
+
+  </script>
+</body>
+</html>

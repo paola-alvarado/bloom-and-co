@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Login - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-login.html">Customer Login</a>
+      <a href="seller-login.html">Seller Login</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Seller Login</h2>
+    <input type="email" id="sellerEmail" placeholder="Email">
+    <input type="password" id="sellerPassword" placeholder="Password">
+    <button type="submit" onclick="sellerLogin()">Login</button>
+    <div class="message" id="sellerLoginMessage"></div>
+
+    <p>Don't have an account? <a href="customer-signup.html" class="color: #5B88B2;">Sign up</a></p>
+
+    <button onclick="location.href='index.html'" class="back-button">← Back to Home</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

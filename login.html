@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="profile.html" id="profileLinkNav">Profile</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Login</h2>
+    <p>Please select your login type:</p>
+    <button onclick="window.location.href='customer-login.html'" class="back-button">Customer Login</button>
+    <button onclick="window.location.href='seller-login.html'" class="back-button">Seller Login</button>
+  </div>
+
+  <script>
+    // Optional: update nav Profile text dynamically
+    document.addEventListener("DOMContentLoaded", () => {
+      const navProfileLink = document.getElementById("profileLinkNav");
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      if (navProfileLink) {
+        if (user && user.name) {
+          navProfileLink.textContent = "Profile";
+          navProfileLink.href = "profile.html";
+        } else {
+          navProfileLink.textContent = "Login";
+          navProfileLink.href = "login.html";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

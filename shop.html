@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-profile.html">Profile</a>
+      <a href="customer-carts.html">My Carts</a>
+      <a href="shop.html">Shop</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2 id="shopWelcomeTitle">Shop Our Products</h2>
+
+    <div id="shopProductList" style="margin-top: 2rem;">
+      <!-- Products will load here -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!user) {
+        window.location.href = "customer-login.html";
+        return;
+      }
+
+      // Personalized welcome at the shop
+      const welcomeTitle = document.getElementById('shopWelcomeTitle');
+      welcomeTitle.innerHTML = `Welcome back, ${user.name}! Happy Shopping ✨`;
+    });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

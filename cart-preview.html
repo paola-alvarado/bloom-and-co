@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart Preview - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-profile.html">Profile</a>
+      <a href="customer-carts.html">My Carts</a>
+      <a href="shop.html">Shop</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2 id="cartWelcomeTitle">My Cart</h2>
+
+    <div id="cartContents">
+      <!-- Items will load here -->
+    </div>
+
+    <div id="cartSummary" style="margin-top: 2rem;"></div>
+
+    <button onclick="checkoutCart()" style="margin-top: 2rem;">Proceed to Checkout</button>
+
+    <a href="shop.html" class="back-link">← Continue Shopping</a>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!user) {
+        window.location.href = "customer-login.html";
+        return;
+      }
+
+      // Personalized cart title
+      const welcomeTitle = document.getElementById('cartWelcomeTitle');
+      welcomeTitle.innerHTML = `${user.name}'s Cart 🛒`;
+      
+      renderCart(); // Draw cart when ready
+    });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Profile - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="customer-carts.html">My Carts</a>
+      <a href="transactions.html">My Transactions</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2 id="welcomeCustomer">Welcome!</h2>
+
+    <p><strong>Email:</strong> <span id="customerEmailDisplay"></span></p>
+    <p><strong>Address:</strong> <span id="customerAddressDisplay"></span></p>
+    <p><strong>Shipping Address:</strong> <span id="customerShippingDisplay"></span></p>
+    <p><strong>Phone:</strong> <span id="customerPhoneDisplay"></span></p>
+
+    <a href="customer-carts.html" class="back-link">→ View My Carts</a><br>
+    <a href="shop.html" class="back-link">→ Go to Shop</a><br>
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!user) {
+        window.location.href = "customer-login.html";
+        return;
+      }
+
+      // PERSONALIZED GREETING
+      const welcomeText = document.getElementById('welcomeCustomer');
+      welcomeText.innerHTML = `Welcome, <span style="color:#5B88B2;">${user.name}</span>!`;
+
+      // Fill other info
+      document.getElementById('customerEmailDisplay').textContent = user.email;
+      document.getElementById('customerAddressDisplay').textContent = user.address;
+      document.getElementById('customerShippingDisplay').textContent = user.shippingAddress;
+      document.getElementById('customerPhoneDisplay').textContent = user.phone;
+    });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>

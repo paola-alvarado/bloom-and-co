@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="profile.html">My Profile</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Edit My Profile</h2>
+
+    <input type="text" id="editName" placeholder="Full Name">
+    <input type="email" id="editEmail" placeholder="Email">
+    <input type="text" id="editAddress" placeholder="Address">
+    <input type="text" id="editPhone" placeholder="Phone">
+    <input type="text" id="editShipping" placeholder="Shipping Address">
+    
+    <button onclick="saveProfile()">Save Changes</button>
+    <div id="editMessage" style="margin-top:1rem;"></div>
+
+    <a href="profile.html" class="back-link">← Back to Profile</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

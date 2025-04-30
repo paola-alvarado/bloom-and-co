@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Sign Up - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Enhancements to form elements */
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #5B88B2;
+      outline: none;
+      box-shadow: 0 0 5px rgba(91, 136, 178, 0.5);
+    }
+
+    button {
+      background-color: #122C4F;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0e2341;
+      transform: scale(1.02);
+    }
+
+    .message {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: red;
+      text-align: center;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 1.5rem;
+      text-align: center;
+      color: #5B88B2;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-login.html">Customer Login</a>
+      <a href="seller-login.html">Seller Login</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Create Seller Account</h2>
+
+    <input type="text" id="sellerName" placeholder="Seller Name">
+    <input type="email" id="sellerEmailSignup" placeholder="Email">
+    <input type="text" id="sellerAddress" placeholder="Address">
+    <input type="text" id="sellerPhone" placeholder="Phone Number">
+    <input type="password" id="sellerPasswordSignup" placeholder="Password">
+
+    <button type="submit" onclick="sellerSignUp()">Sign Up</button>
+
+    <div class="message" id="sellerSignupMessage"></div>
+
+    <p style="text-align:center; margin-top:1rem;">
+      Already have a seller account? <a href="seller-login.html" style="color: #5B88B2;">Login here</a>
+    </p>
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

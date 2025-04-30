@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Carts - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="customer-profile.html">Profile</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container cart-container">
+    <h2><span id="customerNameDisplay">Your</span> Shopping Carts 🛒</h2>
+  
+    <div id="cartsList" class="cart-list">
+      <!-- Individual carts injected here -->
+    </div>
+  
+    <div class="cart-actions">
+      <button onclick="createNewCart()"> Create New Cart</button>
+      <button onclick="window.location.href='customer-profile.html'" class="secondary-btn">← Back to Profile</button>
+    </div>
+  </div>
+
+    <a href="customer-profile.html" class="back-link">← Back to Profile</a>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!user) {
+        window.location.href = "customer-login.html";
+        return;
+      }
+
+      // Set personalized title
+      const cartTitle = document.getElementById('customerCartTitle');
+      cartTitle.innerHTML = `${user.name}'s Shopping Carts`;
+
+      // Load carts (already in script.js)
+    });
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = "index.html";
+    }
+  </script>
+  <script src="script.js"></script>
+
+</body>
+</html>

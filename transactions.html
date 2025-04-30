@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Transactions - Bloom & Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Bloom & Co.</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="customer-profile.html">Profile</a>
+      <a href="customer-carts.html">My Carts</a>
+      <a href="transactions.html">My Transactions</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>My Transactions</h2>
+
+    <div id="transactionList">
+      <!-- Transactions will appear here -->
+    </div>
+    <div id="transactionList">
+        <!-- Transactions will appear here -->
+      </div>
+      <div id="returnSection" style="margin-top: 2rem;">
+        <h3>Return Item</h3>
+        <div id="returnForm" style="display: none;">
+          <p><strong>Item:</strong> <span id="returnItemName"></span></p>
+          <textarea id="returnReason" placeholder="Reason for return..." style="width: 100%; height: 80px; margin: 1rem 0;"></textarea>
+          <button onclick="submitReturn()">Submit Return</button>
+        </div>
+      </div>      
+
+    <a href="customer-profile.html" class="back-link">← Back to Profile</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
