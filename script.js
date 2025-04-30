@@ -21,42 +21,44 @@ function customerLogin() {
     }
   }
 // Placeholder for customer sign up
-function customerSignUp() {
-    const name = document.getElementById('customerName').value.trim();
-    const email = document.getElementById('customerEmail').value.trim();
-    const address = document.getElementById('customerAddress').value.trim();
-    const phone = document.getElementById('customerPhone').value.trim();
-    const shipping = document.getElementById('customerShipping').value.trim();
-    const password = document.getElementById('customerPassword').value.trim();
-    const message = document.getElementById('signupMessage');
-  
-    if (!name || !email || !address || !phone || !shipping || !password) {
-      message.style.color = "red";
-      message.textContent = "Please fill in all fields.";
-      return;
-    }
-  
-    const customers = JSON.parse(localStorage.getItem('customers')) || [];
-    
-    const newCustomer = {
-      id: Date.now(),
-      name,
-      email,
-      address,
-      phone,
-      shippingAddress: shipping,
-      password
-    };
-  
-    customers.push(newCustomer);
-    localStorage.setItem('customers', JSON.stringify(customers));
-  
-    message.style.color = "green";
-    message.textContent = "Account created! Redirecting to login...";
-    setTimeout(() => {
+async function customerSignUp() {
+  const name = document.getElementById("customerName").value;
+  const email = document.getElementById("customerEmail").value;
+  const address = document.getElementById("customerAddress").value;
+  const phone = document.getElementById("customerPhone").value;
+  const shipping = document.getElementById("customerShipping").value;
+  const password = document.getElementById("customerPassword").value;
+
+  const newCustomer = {
+    name,
+    email,
+    address,
+    phone,
+    shipping,
+    password,
+  };
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/customer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCustomer),
+    });
+
+    if (response.ok) {
+      alert("Account created successfully!");
       window.location.href = "customer-login.html";
-    }, 1500);
+    } else {
+      alert("Signup failed. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error signing up:", error);
+    alert("An error occurred. Please try again.");
   }
+}
+
 // Populate customer profile if on customer-profile.html
 document.addEventListener('DOMContentLoaded', () => {
     if (document.title.includes('Customer Profile')) {
@@ -891,3 +893,32 @@ if (document.title.includes('My Carts')) {
     `).join('');
   }
 }
+
+  const carousel = document.getElementById('homepageCarousel');
+  const images = carousel.querySelectorAll('img');
+  const leftBtn = carousel.querySelector('.arrow.left');
+  const rightBtn = carousel.querySelector('.arrow.right');
+
+  let index = 0;
+
+  function showSlide(i) {
+    images.forEach(img => img.classList.remove('active'));
+    images[i].classList.add('active');
+  }
+
+  leftBtn.addEventListener('click', () => {
+    index = (index - 1 + images.length) % images.length;
+    showSlide(index);
+  });
+
+  rightBtn.addEventListener('click', () => {
+    index = (index + 1) % images.length;
+    showSlide(index);
+  });
+
+  // Optional: Auto-rotate every 5 seconds
+  setInterval(() => {
+    index = (index + 1) % images.length;
+    showSlide(index);
+  }, 5000);
+

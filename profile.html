@@ -1,33 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile - Bloom & Co.</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Profile - Bloom & Co.</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #FBF9E4;
+      margin: 0;
+    }
+
+    header {
+      background-color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-links a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #122C4F;
+      font-weight: 500;
+    }
+
+    .profile-box {
+      max-width: 500px;
+      margin: 5vh auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #122C4F;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #122C4F;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .logout-btn,
+    .save-btn,
+    .reset-btn {
+      background-color: #122C4F;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover,
+    .save-btn:hover,
+    .reset-btn:hover {
+      background-color: #0e203c;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 1rem;
+      color: green;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #122C4F;
+      margin-bottom: 1rem;
+    }
+
+    .file-input {
+      margin-top: 1rem;
+    }
+
+    .reset-btn {
+      background-color: #888;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #fefcea, #e6e9f0); min-height: 100vh; margin: 0;">
+
   <header>
-    <div class="logo">Bloom & Co.</div>
-    <nav>
+    <div class="logo" style="font-weight: bold; color: #122C4F;">Bloom & Co.</div>
+    <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="shop.html">Shop</a>
-      <a href="customer-carts.html">My Carts</a>
-      <a href="transactions.html">My Transactions</a>
-      <a href="#" onclick="logout()">Logout</a>
-    </nav>
+      <a href="login.html">Login</a>
+      <a id="profileLinkNav" href="#">Please login first</a>
+    </div>
   </header>
 
-  <div class="form-container">
-    <h2>My Profile</h2>
+  <div class="profile-box">
+    <h2 id="greeting">Welcome!</h2>
+    <p style="margin-top: -0.5rem; color: #888;">Loyal Customer</p>
 
-    <div id="profileDetails">
-      <!-- Profile info will load here -->
+    <div style="margin-bottom: 1rem;">
+      <img src="" alt="Profile Picture" id="profileImage" class="profile-pic" style="box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     </div>
 
-    <button onclick="location.href='index.html'" class="back-button">← Back to Home</button>
+    <div class="file-input">
+      <input type="file" id="picUpload" accept="image/*" onchange="uploadPic(event)">
+      <button class="reset-btn" onclick="resetProfilePic()">Reset Picture</button>
+    </div>
+
+    <form onsubmit="updateProfile(event)">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Your full name">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Your email address">
+
+      <div class="actions" style="gap: 1rem;">
+        <button type="submit" class="save-btn" style="flex: 1;">Save Changes</button>
+        <button type="button" class="logout-btn" onclick="logout()" style="flex: 1;">Logout</button>
+      </div>
+    </form>
+
+    <div class="message" id="message"></div>
   </div>
 
-  <script src="script.js"></script>
+
+  <script>
+    const navProfileLink = document.getElementById("profileLinkNav");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser && storedUser.name) {
+      navProfileLink.textContent = "Profile";
+      navProfileLink.href = "profile.html";
+
+      // Populate fields
+      document.getElementById("greeting").textContent = `Welcome, ${storedUser.name}!`;
+      document.getElementById("name").value = storedUser.name;
+      document.getElementById("email").value = storedUser.email;
+
+      // Load profile picture
+      const profileImg = localStorage.getItem("profilePic");
+      document.getElementById("profileImage").src = profileImg || "https://i.imgur.com/1X2xQWg.png"; // default fallback
+    } else {
+      window.location.href = "login.html";
+    }
+
+    function updateProfile(event) {
+      event.preventDefault();
+      const updatedName = document.getElementById("name").value.trim();
+      const updatedEmail = document.getElementById("email").value.trim();
+
+      if (!updatedName || !updatedEmail) {
+        showMessage("Please fill out both fields.", "red");
+        return;
+      }
+
+      const updatedUser = {
+        ...storedUser,
+        name: updatedName,
+        email: updatedEmail
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      document.getElementById("greeting").textContent = `Welcome, ${updatedName}!`;
+      showMessage("Profile updated successfully!", "green");
+    }
+
+    function uploadPic(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imgURL = e.target.result;
+        document.getElementById("profileImage").src = imgURL;
+        localStorage.setItem("profilePic", imgURL);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetProfilePic() {
+      localStorage.removeItem("profilePic");
+      document.getElementById("profileImage").src = "https://i.imgur.com/1X2xQWg.png";
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("profilePic");
+      window.location.href = "login.html";
+    }
+
+    function showMessage(text, color) {
+      const msg = document.getElementById("message");
+      msg.textContent = text;
+      msg.style.color = color;
+      setTimeout(() => {
+        msg.textContent = "";
+      }, 3000);
+    }
+  </script>
 </body>
 </html>

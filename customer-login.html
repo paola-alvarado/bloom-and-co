@@ -6,28 +6,73 @@
   <title>Customer Login - Bloom & Co.</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header>
-    <div class="logo">Bloom & Co.</div>
+
+<body style="background: linear-gradient(135deg, #fefcea, #e6e9f0); min-height: 100vh; margin: 0;">
+
+  <header style="background-color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <div class="logo" style="font-weight: bold; color: #122C4F;">Bloom & Co.</div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="customer-login.html">Customer Login</a>
-      <a href="seller-login.html">Seller Login</a>
+    
     </nav>
   </header>
 
-  <div class="form-container">
-    <h2>Customer Login</h2>
-    <input type="email" id="customerEmail" placeholder="Email">
-    <input type="password" id="customerPassword" placeholder="Password">
-    <button type="submit" onclick="customerLogin()">Login</button>
-    <div class="message" id="loginMessage"></div>
+  <div style="max-width: 450px; margin: 8vh auto; background: white; padding: 2.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+    <h2 style="color: #122C4F; margin-bottom: 1.5rem;">Customer Login</h2>
 
-    <p>Don't have an account? <a href="customer-signup.html" class="color: #5B88B2;">Sign up</a></p>
-   
-    <button onclick="location.href='index.html'" class="back-button">← Back to Home</button>
+    <form id="login_form">
+      <input type="email" id="username" placeholder="Email" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #ccc;">
+      <input type="password" id="pass" placeholder="Password" required style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #ccc;">
+
+      <button type="submit" style="width: 100%; padding: 0.75rem; background-color: #122C4F; color: white; border: none; border-radius: 6px; font-weight: bold; transition: 0.3s;">
+        Login
+      </button>
+    </form>
+
+    <p style="margin-top: 1rem;">
+      Don't have an account? <a href="customer-signup.html" style="color: #5B88B2;">Sign up</a>
+    </p>
+    <a href="index.html" style="display: inline-block; margin-top: 1rem; color: #122C4F;">← Back to Home</a>
+    
+    <div id="loginMessage" style="margin-top: 1rem; color: red;"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const username = document.getElementById("username");
+    const password = document.getElementById("pass");
+    const form = document.getElementById("login_form");
+    const messageDiv = document.getElementById("loginMessage");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const login_user = {
+        username: username.value,
+        password: password.value
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/login", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(login_user)
+        });
+
+        const key = await response.json();
+        if (key.session_token) {
+          alert("Welcome Back!");
+          localStorage.setItem("token", key.session_token);
+          localStorage.setItem("user", JSON.stringify({ name: key.name, email: login_user.username }));
+          window.location.replace("./profile.html");
+        } else {
+          messageDiv.textContent = "Invalid credentials. Please try again.";
+        }
+      } catch (error) {
+        console.error(error);
+        messageDiv.textContent = "Server error. Please try again later.";
+      }
+    });
+  </script>
+  
 </body>
 </html>
