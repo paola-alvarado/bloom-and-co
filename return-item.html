@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Return Item - Bloom & Co.</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #fefcea, #e6e9f0);
+      padding: 2rem;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #122C4F;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #122C4F;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Return Item</h2>
+    <form id="returnForm">
+      <input type="number" id="transaction_id" placeholder="Transaction ID" required>
+      <input type="date" id="return_date" required>
+      <textarea id="reason" placeholder="Reason for return" required></textarea>
+      <select id="return_status" required>
+        <option value="">Select Status</option>
+        <option value="0">Pending</option>
+        <option value="1">Approved</option>
+      </select>
+      <input type="number" id="product_id" placeholder="Product ID" required>
+      <button type="submit">Submit Return</button>
+    </form>
+    <div id="returnMessage" class="message"></div>
+  </div>
+
+  <script>
+    // Autofill return_date with today's date
+    document.getElementById("return_date").valueAsDate = new Date();
+
+    // Autofill transaction_id and product_id if passed as URL params
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("transaction_id").value = params.get("transaction_id") || '';
+    document.getElementById("product_id").value = params.get("product_id") || '';
+
+    const form = document.getElementById("returnForm");
+    const messageDiv = document.getElementById("returnMessage");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const token = user?.token;
+
+      if (!token) {
+        messageDiv.textContent = "User not logged in.";
+        messageDiv.className = "message error";
+        return;
+      }
+
+      const returnData = {
+        transaction_id: document.getElementById("transaction_id").value,
+        return_date: document.getElementById("return_date").value,
+        reason: document.getElementById("reason").value,
+        return_status: parseInt(document.getElementById("return_status").value),
+        product_id: document.getElementById("product_id").value
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/return_item", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(returnData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          messageDiv.textContent = "Return request submitted successfully!";
+          messageDiv.className = "message success";
+          form.reset();
+          document.getElementById("return_date").valueAsDate = new Date(); // Reset date
+        } else {
+          messageDiv.textContent = result.message || "Failed to submit return.";
+          messageDiv.className = "message error";
+        }
+      } catch (err) {
+        console.error(err);
+        messageDiv.textContent = "Server error. Please try again later.";
+        messageDiv.className = "message error";
+      }
+    });
+  </script>
+
+</body>
+</html>

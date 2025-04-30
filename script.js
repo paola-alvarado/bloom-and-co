@@ -922,3 +922,40 @@ if (document.title.includes('My Carts')) {
     showSlide(index);
   }, 5000);
 
+// Return //
+function returnItem(cartItemId, productId) {
+  const user = JSON.parse(localStorage.getItem('loggedInUser'));
+  if (!user) {
+    alert("You must be logged in to return an item.");
+    return;
+  }
+
+  const returnPayload = {
+    transaction_id: cartItemId, // Adjust as needed to reflect the correct transaction ID
+    return_date: new Date().toISOString().split('T')[0],
+    reason: "No longer needed", // You can enhance this with a user input later
+    return_status: 1,
+    product_id: productId
+  };
+
+  fetch('http://yourapi.com/return_item', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.token}`
+    },
+    body: JSON.stringify(returnPayload)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Failed to return item");
+    return res.json();
+  })
+  .then(data => {
+    alert("Item return requested successfully!");
+    // optionally refresh cart here
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error processing return.");
+  });
+}
