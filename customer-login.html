@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Login - Bloom & Co.</title>
+  <script src="./variables.js"></script>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
@@ -127,13 +128,13 @@
       e.preventDefault();
 
       const login_user = {
-        username: username.value,
+        email: username.value,
         password: password.value
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:5000/login", {
-          method: "PUT",
+        const response = await fetch(`${url}auth/login`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
@@ -141,10 +142,9 @@
         });
 
         const key = await response.json();
-        if (key.session_token) {
+        if (key.token) {
           alert("Welcome Back!");
-          localStorage.setItem("token", key.session_token);
-          localStorage.setItem("user", JSON.stringify({ name: key.name, email: login_user.username }));
+          localStorage.setItem("token", key.token);
           window.location.href = "customer-profile.html";
         } else {
           messageDiv.textContent = "Invalid credentials. Please try again.";

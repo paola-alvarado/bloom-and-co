@@ -36,24 +36,24 @@
   <script src="script.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = JSON.parse(localStorage.getItem('loggedInUser'));
-      if (!user) {
-        window.location.href = "customer-login.html";
-        return;
-      }
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    //   if (!user) {
+    //     window.location.href = "customer-login.html";
+    //     return;
+    //   }
 
-      // Personalized cart title
-      const welcomeTitle = document.getElementById('cartWelcomeTitle');
-      welcomeTitle.innerHTML = `${user.name}'s Cart 🛒`;
+    //   // Personalized cart title
+    //   const welcomeTitle = document.getElementById('cartWelcomeTitle');
+    //   welcomeTitle.innerHTML = `${user.name}'s Cart 🛒`;
       
-      renderCart(); // Draw cart when ready
-    });
+    //   renderCart(); // Draw cart when ready
+    // });
 
-    function logout() {
-      localStorage.removeItem('loggedInUser');
-      window.location.href = "index.html";
-    }
+    // function logout() {
+    //   localStorage.removeItem('loggedInUser');
+    //   window.location.href = "index.html";
+    // }
   </script>
 </body>
 </html>

@@ -36,7 +36,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      const user = JSON.parse(localStorage.getItem('token'));
       if (!user) {
         window.location.href = "customer-login.html";
         return;
