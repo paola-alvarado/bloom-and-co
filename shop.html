@@ -44,14 +44,12 @@
       const welcomeTitle = document.getElementById('shopWelcomeTitle');
       welcomeTitle.innerHTML = `Welcome back! Happy Shopping ✨`;
       const list = document.getElementById("list");
-      console.log(list);
       const response = await fetch(`${url}product`, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
       });
       const parsed = await response.json();
-      console.log(parsed[0]);
       for(itemValue in parsed){
         const item = parsed[itemValue];
         console.log(item);
@@ -62,20 +60,38 @@
               <p>${item.Description}</p>
               <p class="bold">$${item.Price}</p>
             </div>
-            <button onClick="addToCart(${item.Product_ID})">Add to cart</button>
+            <div class="">
+              <input type="number" name="quantity${item.Product_ID}" id="quantity${item.Product_ID}" min="1" value="1"/>
+              <button onClick="addToCart(${item.Product_ID})">Add to cart</button>
+            </div>
           </div>
         `;
       }
     });
     async function addToCart(id){
       console.log(`The ID is ${id}`);
-      const response = await fetch(`${url}product`, {
+      const quantity = document.getElementById(`quantity${id}`).value;
+      if(parseInt(quantity)<0){
+        alert("Quantity has to be greater than 0");
+        return;
+      }
+      const data = {
+        product_id: id,
+        quantity: quantity
+      }
+      console.log(data);
+      const response = await fetch(`${url}cart_item`, {
+        method: 'POST',
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        body: JSON.stringify(data)
       });
       const parsed = await response.json();
-      document.getElementById(`Product${id}`).remove();
+      if(parsed.message === "Cart item saved"){
+        alert("Item added to the cart");
+        document.getElementById(`Product${id}`).remove();
+      }
     }
     function logout() {
       localStorage.removeItem('token');
@@ -93,7 +109,7 @@
       margin-bottom: 10px;
     }
     .item-text{
-      width: 70%;
+      width: 60%;
       background: none;
     }
     .list-item>button{
@@ -101,6 +117,10 @@
     }
     .bold{
       font-weight: bold;
+    }
+    input[type="number"]{
+      width: 40px;
+      padding: 10px;
     }
   </style>
 </body>
