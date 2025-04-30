@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop - Bloom & Co.</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="./variables.js"></script>
 </head>
 
 <body>
@@ -24,28 +25,74 @@
 
     <div id="shopProductList" style="margin-top: 2rem;">
       <!-- Products will load here -->
+       <div class="list" id="list">
+          
+       </div>
     </div>
   </div>
 
   <script src="script.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    document.addEventListener('DOMContentLoaded', async() => {
+      const user = localStorage.getItem('token');
       if (!user) {
         window.location.href = "customer-login.html";
         return;
       }
 
-      // Personalized welcome at the shop
       const welcomeTitle = document.getElementById('shopWelcomeTitle');
       welcomeTitle.innerHTML = `Welcome back, ${user.name}! Happy Shopping ✨`;
+      const list = document.getElementById("list");
+      console.log(list);
+      const response = await fetch(`${url}product`, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const parsed = await response.json();
+      console.log(parsed[0]);
+      for(itemValue in parsed){
+        const item = parsed[itemValue];
+        console.log(item);
+        list.innerHTML += `
+          <div class="list-item">
+            <div class="item-text">
+              <h3>${item.Product_Name}</h3>
+              <p>${item.Description}</p>
+              <p class="bold">$${item.Price}</p>
+            </div>
+            <button onClick="addToCart(${item.Product_ID})">Add to cart</button>
+          </div>
+        `;
+      }
     });
-
+    
     function logout() {
-      localStorage.removeItem('loggedInUser');
+      localStorage.removeItem('token');
       window.location.href = "index.html";
     }
   </script>
+  <style>
+    .list-item{
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      background-color: #f7f7f7;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .item-text{
+      width: 70%;
+      background: none;
+    }
+    .list-item>button{
+      height: fit-content;
+    }
+    .bold{
+      font-weight: bold;
+    }
+  </style>
 </body>
 </html>
