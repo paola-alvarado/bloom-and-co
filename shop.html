@@ -42,7 +42,7 @@
       }
 
       const welcomeTitle = document.getElementById('shopWelcomeTitle');
-      welcomeTitle.innerHTML = `Welcome back, ${user.name}! Happy Shopping ✨`;
+      welcomeTitle.innerHTML = `Welcome back! Happy Shopping ✨`;
       const list = document.getElementById("list");
       console.log(list);
       const response = await fetch(`${url}product`, {
@@ -56,7 +56,7 @@
         const item = parsed[itemValue];
         console.log(item);
         list.innerHTML += `
-          <div class="list-item">
+          <div class="list-item" id="Product${item.Product_ID}">
             <div class="item-text">
               <h3>${item.Product_Name}</h3>
               <p>${item.Description}</p>
@@ -67,7 +67,16 @@
         `;
       }
     });
-    
+    async function addToCart(id){
+      console.log(`The ID is ${id}`);
+      const response = await fetch(`${url}product`, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const parsed = await response.json();
+      document.getElementById(`Product${id}`).remove();
+    }
     function logout() {
       localStorage.removeItem('token');
       window.location.href = "index.html";
